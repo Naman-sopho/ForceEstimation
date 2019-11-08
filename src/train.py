@@ -1,5 +1,6 @@
 import network
 import torch
+import os
 
 
 def trainNetworks(train_data, train_labels, val_data, val_labels, steps, learning_rate):
@@ -34,7 +35,7 @@ def trainNetworks(train_data, train_labels, val_data, val_labels, steps, learnin
 
     # SGD Implementation
     for epoch in range(epochs):
-        for data, label in zip(train_data):
+        for data, label in zip(train_data, train_labels):
             output1 = network1(data)
             output2 = network2(data)
             output3 = network3(data)
@@ -78,4 +79,16 @@ def trainNetworks(train_data, train_labels, val_data, val_labels, steps, learnin
             # Log progress
             print('Step: {}, Loss: [{.3f}, {.3f}, {.3f}, {.3f}, {.3f}, {.3f}]'
                   .format(epoch+1, loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss5.item()))
+                  
+    # Save the models after training
+    MODELS_DIR = os.path.join('..' + 'models')
+    
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network1.torch'))
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network2.torch'))
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network3.torch'))
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network4.torch'))
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network5.torch'))
+    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network6.torch'))
+    
+            
 
