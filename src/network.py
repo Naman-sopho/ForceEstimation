@@ -1,4 +1,6 @@
+import torch
 import torch.nn as nn
+
 
 class model(nn.Module):
     def __init__(self):
@@ -21,9 +23,8 @@ class model(nn.Module):
         ##
         self.layer2 = nn.Linear(100, 1, bias=True)
 
-
-    def forward(self, input):
-        layer1 = self.layer1(input)
+    def forward(self, x):
+        layer1 = self.layer1(x)
         layer1 = torch.tanh(layer1)
 
         layer2 = self.layer2(layer1)
