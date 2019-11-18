@@ -3,7 +3,7 @@ import torch
 import os
 
 
-def trainNetworks(train_data, train_labels, val_data, val_labels, epochs, learning_rate):
+def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epochs=5, learning_rate=0.001):
     """
     Trains 6 networks on the data using the hyperparameters provided.
     Saves the final model as in the models directory with timestamp as the name.
@@ -36,12 +36,20 @@ def trainNetworks(train_data, train_labels, val_data, val_labels, epochs, learni
     # SGD Implementation
     for epoch in range(epochs):
         for data, label in zip(train_data, train_labels):
+            data = torch.from_numpy(data)
+            data = data.type(torch.FloatTensor)
+            label = torch.from_numpy(label)
+            label = data.type(torch.FloatTensor)
+            #print(data)
+
             output1 = network1(data)
             output2 = network2(data)
             output3 = network3(data)
             output4 = network4(data)
             output5 = network5(data)
             output6 = network6(data)
+
+            #print(output1)
 
             # Each label frame consists of 6 values corresponding to each joint
             loss1 = criterion(output1, label[0])
@@ -77,11 +85,12 @@ def trainNetworks(train_data, train_labels, val_data, val_labels, epochs, learni
             optimiser6.step()
 
             # Log progress
-            print('Step: {}, Loss: [{.3f}, {.3f}, {.3f}, {.3f}, {.3f}, {.3f}]'
+            print('Step: {}, Loss: [{:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}]'
                   .format(epoch+1, loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()))
                   
     # Save the models after training
-    MODELS_DIR = os.path.join('..' + 'models')
+    MODELS_DIR = os.path.join('..' + '/models')
+    print('Saving models to: {}'.format(MODELS_DIR))
     
     torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network1.torch'))
     torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network2.torch'))
