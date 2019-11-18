@@ -3,7 +3,7 @@ import torch
 import os
 
 
-def trainNetworks(train_data, train_labels, val_data, val_labels, steps, learning_rate):
+def trainNetworks(train_data, train_labels, val_data, val_labels, epochs, learning_rate):
     """
     Trains 6 networks on the data using the hyperparameters provided.
     Saves the final model as in the models directory with timestamp as the name.
@@ -78,7 +78,7 @@ def trainNetworks(train_data, train_labels, val_data, val_labels, steps, learnin
 
             # Log progress
             print('Step: {}, Loss: [{.3f}, {.3f}, {.3f}, {.3f}, {.3f}, {.3f}]'
-                  .format(epoch+1, loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss5.item()))
+                  .format(epoch+1, loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + 'models')
