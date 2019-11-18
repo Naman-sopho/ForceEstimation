@@ -39,7 +39,7 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             data = torch.from_numpy(data)
             data = data.type(torch.FloatTensor)
             label = torch.from_numpy(label)
-            label = data.type(torch.FloatTensor)
+            label = label.type(torch.FloatTensor)
             #print(data)
 
             output1 = network1(data)
@@ -48,8 +48,6 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             output4 = network4(data)
             output5 = network5(data)
             output6 = network6(data)
-
-            #print(output1)
 
             # Each label frame consists of 6 values corresponding to each joint
             loss1 = criterion(output1, label[0])
@@ -93,11 +91,11 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
     print('Saving models to: {}'.format(MODELS_DIR))
     
     torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network1.torch'))
-    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network2.torch'))
-    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network3.torch'))
-    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network4.torch'))
-    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network5.torch'))
-    torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network6.torch'))
+    torch.save(network2.state_dict(), os.path.join(MODELS_DIR, 'network2.torch'))
+    torch.save(network3.state_dict(), os.path.join(MODELS_DIR, 'network3.torch'))
+    torch.save(network4.state_dict(), os.path.join(MODELS_DIR, 'network4.torch'))
+    torch.save(network5.state_dict(), os.path.join(MODELS_DIR, 'network5.torch'))
+    torch.save(network6.state_dict(), os.path.join(MODELS_DIR, 'network6.torch'))
     
             
 
