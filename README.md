@@ -15,3 +15,15 @@ Output Size: 1
   
   
 6 such networks are used. Each network is trained to provide a torque estimate of one the joints. This torque is then used for the Force estimate.
+
+## Commands
+
+For training the network(currently uses hardcoded arrays as input data)
+```
+python3 main.py train <Enter number of epochs here>
+```
+
+For running inference using a saved model(currently uses the same hardcoded array as used for training)
+```
+python3 main.py inference
+```
