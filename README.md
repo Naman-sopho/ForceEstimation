@@ -18,9 +18,9 @@ Output Size: 1
 
 ## Commands
 
-For training the network(currently uses hardcoded arrays as input data)
+For training the network(uses given rosbag file)
 ```
-python3 main.py train <Enter number of epochs here>
+python3 main.py train <Path to rosbag file> <Enter number of epochs here>
 ```
 
 For running inference using a saved model(currently uses the same hardcoded array as used for training)

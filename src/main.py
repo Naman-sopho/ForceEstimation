@@ -2,14 +2,17 @@ import inference
 import numpy as np
 import sys
 import train
+import data
 
 
-def trainNetworks(epochs):
+def trainNetworks(inputFile, epochs):
     
     # Load data
-    train_data = np.array([[1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]], dtype=np.double)
-    train_labels = np.array([[1, 2, 3, 4, 5, 6]], dtype=np.double)
+    # train_data = np.array([[1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]], dtype=np.double)
+    # train_labels = np.array([[1, 2, 3, 4, 5, 6]], dtype=np.double)
     
+    train_data, train_labels = data.read_data(inputFile)
+
     train.trainNetworks(train_data=train_data, train_labels=train_labels, epochs=epochs)
 
 
@@ -26,8 +29,9 @@ if __name__ == '__main__':
     toTrain = sys.argv[1] == 'train'
 
     if toTrain:
-        epochs = int(sys.argv[2])
-        trainNetworks(epochs)
+        inputFile = sys.argv[2]
+        epochs = sys.argv[3]
+        trainNetworks(inputFile, epochs)
     else:
         inputFile = sys.argv[2]
         runInference(inputFile)
