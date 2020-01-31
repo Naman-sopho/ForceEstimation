@@ -9,7 +9,7 @@ def read_data(filename):
     :param filename: Name of the rosbag file
     """
 
-    bag = bag.Bag(filename)
+    bag_ = bag.Bag(filename)
 
     # The topic which contains data required for training the networks
     relevant_topic = 'state_joint_current'
@@ -17,7 +17,9 @@ def read_data(filename):
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
 
-    for message in bag.read_messages():
+    print("Start reading bag file.")
+
+    for message in bag_.read_messages():
         if relevant_topic in message.topic:
             positions = np.array(message.message.position)
             velocities = np.array(message.message.velocity)
@@ -28,5 +30,13 @@ def read_data(filename):
 
             data = np.append(data, np.array([positions]), axis=0)
             labels = np.append(labels, np.array([efforts]), axis=0)
+
+    print()
+    print("Reading file complete.")
+
+    print("Saving to csv file.")
+
+    np.savetxt('data.csv', data, fmt='%10.10f', delimiter=',')
+    np.savetxt('labels.csv', labels, fmt='%10.10f', delimiter=',')
 
     return data, labels

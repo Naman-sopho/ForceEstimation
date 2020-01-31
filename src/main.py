@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     if toTrain:
         inputFile = sys.argv[2]
-        epochs = sys.argv[3]
+        epochs = int(sys.argv[3])
         trainNetworks(inputFile, epochs)
     else:
         inputFile = sys.argv[2]
