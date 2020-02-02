@@ -115,10 +115,10 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             with torch.no_grad():
                 print("Progress: {}/{}".format(index+1, data_length), end="\r", flush=True)
                 index += 1
-                loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]))
+                loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
 
             # Log progress
-        print('Epoch: {}, Avg Loss: {}'.format(epoch+1, loss.mean(axis=0)))
+        print('Epoch: {}, Avg Loss: {}'.format(epoch+1, np.mean(loss, axis=0)))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
