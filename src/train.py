@@ -29,6 +29,8 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
     network5 = network.model()
     network6 = network.model()
 
+    data_length = len(train_data)
+
     train_data = torch.from_numpy(train_data)
     train_data = train_data.type(torch.FloatTensor)
     train_labels = torch.from_numpy(train_labels)
@@ -59,6 +61,7 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
     print("Starting training!!!")
     # SGD Implementation
     for epoch in range(epochs):
+        index = 0
         for data, label in zip(train_data, train_labels):
             # data = torch.from_numpy(data)
             # data = data.type(torch.FloatTensor)
@@ -110,10 +113,12 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             optimiser6.step()
 
             with torch.no_grad():
+                print("Progress: {}/{}".format(index+1, data_length), end="\r", flush=True)
+                index += 1
                 loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]))
 
             # Log progress
-        print('Step: {}, Avg Loss: {:.3f}'.format(epoch+1, loss.mean(axis=0)))
+        print('Epoch: {}, Avg Loss: {}'.format(epoch+1, loss.mean(axis=0)))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
