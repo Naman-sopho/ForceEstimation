@@ -1,5 +1,5 @@
-from rosbag import bag
 import numpy as np
+import os
 
 def read_data(filename):
     """
@@ -9,6 +9,17 @@ def read_data(filename):
     :param filename: Name of the rosbag file
     """
 
+    # If csv file present read from it
+    data_csv = 'data.csv'
+    labels_csv = 'labels.csv'
+
+    if os.path.exists(data_csv):
+        train_data = np.loadtxt(data_csv, delimiter=',')
+        train_labels = np.loadtxt(labels_csv, delimiter=',')
+
+        return train_data, train_labels
+
+    from rosbag import bag
     bag_ = bag.Bag(filename)
 
     # The topic which contains data required for training the networks
