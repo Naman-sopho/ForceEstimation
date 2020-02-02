@@ -1,6 +1,7 @@
 import network
 import torch
 import os
+import numpy as np
 
 
 def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epochs=5, learning_rate=0.001):
@@ -41,8 +42,8 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
         network5 = network.model().cuda()
         network6 = network.model().cuda()
 
-        train_data = train_data.cuda()
-        train_labels = train_labels.cuda()
+        #train_data = train_data.cuda()
+        #train_labels = train_labels.cuda()
 
     optimiser1 = torch.optim.Adam(network1.parameters(), learning_rate)
     optimiser2 = torch.optim.Adam(network2.parameters(), learning_rate)
@@ -53,6 +54,9 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
 
     criterion = torch.nn.MSELoss()
 
+    loss = np.empty((0, 6))
+
+    print("Starting training!!!")
     # SGD Implementation
     for epoch in range(epochs):
         for data, label in zip(train_data, train_labels):
@@ -61,6 +65,9 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             # label = torch.from_numpy(label)
             # label = label.type(torch.FloatTensor)
             #print(data)
+
+            data = data.cuda()
+            label = label.cuda()
 
             output1 = network1(data)
             output2 = network2(data)
@@ -102,9 +109,11 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
             loss6.backward()
             optimiser6.step()
 
+            with torch.no_grad():
+                loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]))
+
             # Log progress
-            print('Step: {}, Loss: [{:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}, {:.3f}]'
-                  .format(epoch+1, loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()))
+        print('Step: {}, Avg Loss: {:.3f}'.format(epoch+1, loss.mean(axis=0)))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
