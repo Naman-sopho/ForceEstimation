@@ -17,12 +17,32 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
     :param learning_rate: Learning rate used for training
     """
 
+    on_gpu = False
+    if torch.cuda.is_available:
+        on_gpu = True
+
     network1 = network.model()
     network2 = network.model()
     network3 = network.model()
     network4 = network.model()
     network5 = network.model()
     network6 = network.model()
+
+    train_data = torch.from_numpy(train_data)
+    train_data = train_data.type(torch.FloatTensor)
+    train_labels = torch.from_numpy(train_labels)
+    train_labels = train_labels.type(torch.FloatTensor)
+
+    if on_gpu:
+        network1 = network.model().cuda()
+        network2 = network.model().cuda()
+        network3 = network.model().cuda()
+        network4 = network.model().cuda()
+        network5 = network.model().cuda()
+        network6 = network.model().cuda()
+
+        train_data = train_data.cuda()
+        train_labels = train_labels.cuda()
 
     optimiser1 = torch.optim.Adam(network1.parameters(), learning_rate)
     optimiser2 = torch.optim.Adam(network2.parameters(), learning_rate)
@@ -36,10 +56,10 @@ def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epoc
     # SGD Implementation
     for epoch in range(epochs):
         for data, label in zip(train_data, train_labels):
-            data = torch.from_numpy(data)
-            data = data.type(torch.FloatTensor)
-            label = torch.from_numpy(label)
-            label = label.type(torch.FloatTensor)
+            # data = torch.from_numpy(data)
+            # data = data.type(torch.FloatTensor)
+            # label = torch.from_numpy(label)
+            # label = label.type(torch.FloatTensor)
             #print(data)
 
             output1 = network1(data)

@@ -14,10 +14,10 @@ def read_data(filename):
     labels_csv = 'labels.csv'
 
     if os.path.exists(data_csv):
-        train_data = np.loadtxt(data_csv, delimiter=',')
-        train_labels = np.loadtxt(labels_csv, delimiter=',')
+        data = np.loadtxt(data_csv, delimiter=',')
+        labels = np.loadtxt(labels_csv, delimiter=',')
 
-        return train_data, train_labels
+        return data, labels
 
     from rosbag import bag
     bag_ = bag.Bag(filename)
