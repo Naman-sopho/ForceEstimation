@@ -4,7 +4,7 @@ import os
 import numpy as np
 
 
-def trainNetworks(train_data, train_labels, val_data=None, val_labels=None, epochs=5, learning_rate=0.001):
+def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
     """
     Trains 6 networks on the data using the hyperparameters provided.
     Saves the final model as in the models directory with timestamp as the name.
