@@ -17,9 +17,9 @@ def read_data(filename):
         data = np.loadtxt(data_csv, delimiter=',')
         labels = np.loadtxt(labels_csv, delimiter=',')
 
-        train_data, train_labels, val_data, val_labels, test_data, test_labels = split_train_test(data, labels)
+        train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
 
-        return train_data, train_labels, val_data, val_labels, test_data, test_labels = split_train_test(data, labels)
+        return train_data, train_labels, test_data, test_labels
 
     from rosbag import bag
     bag_ = bag.Bag(filename)
@@ -54,7 +54,7 @@ def read_data(filename):
 
     train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
 
-    return train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
+    return train_data, train_labels, test_data, test_labels
 
 def split_train_test(data, labels):
 

@@ -56,12 +56,28 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
 
     criterion = torch.nn.MSELoss()
 
-    loss = np.empty((0, 6))
-
     print("Starting training!!!")
     # SGD Implementation
     for epoch in range(epochs):
         index = 0
+
+        train_loss = np.empty((0, 6))
+        val_loss = np.empty((0, 6))
+    
+        # Shuffle train_data randomly
+        random_perm = np.random.permutation(data_length)
+        train_data = train_data[random_perm]
+        train_labels = train_labels[random_perm]
+
+        # Split into train and val
+        val_data = train_data[:int(0.2*data_length),:]
+        val_data = val_data.cuda()
+        val_labels = train_labels[:int(0.2*data_length),:]
+        val_labels = val_labels.cuda()
+
+        train_data = train_data[int(0.2*data_length):,:]
+        train_labels = train_labels[int(0.2*data_length):,:]
+
         for data, label in zip(train_data, train_labels):
             # data = torch.from_numpy(data)
             # data = data.type(torch.FloatTensor)
@@ -115,6 +131,22 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             with torch.no_grad():
                 print("Progress: {}/{}".format(index+1, data_length), end="\r", flush=True)
                 index += 1
+
+                output1 = network1(val_data)
+                output2 = network2(val_data)
+                output3 = network3(val_data)
+                output4 = network4(val_data)
+                output5 = network5(val_data)
+                output6 = network6(val_data)
+
+                loss1 = criterion(output1, val_labels[:,0])
+                loss2 = criterion(output2, val_labels[:,1])
+                loss3 = criterion(output3, val_labels[:,2])
+                loss4 = criterion(output4, val_labels[:,3])
+                loss5 = criterion(output5, val_labels[:,4])
+                loss6 = criterion(output6, val_labels[:,5])
+                
+                val_loss = np.append(val_loss, np.array([[loss1, loss2, loss3, loss4, loss5, loss6]]))
                 loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
 
             # Log progress
