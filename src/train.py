@@ -19,7 +19,7 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
     """
 
     on_gpu = False
-    if torch.cuda.is_available:
+    if torch.cuda.is_available():
         on_gpu = True
 
     network1 = network.model()
@@ -71,9 +71,11 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
 
         # Split into train and val
         val_data = train_data[:int(0.2*data_length),:]
-        val_data = val_data.cuda()
+        if on_gpu:
+            val_data = val_data.cuda()
         val_labels = train_labels[:int(0.2*data_length),:]
-        val_labels = val_labels.cuda()
+        if on_gpu:
+            val_labels = val_labels.cuda()
 
         train_data = train_data[int(0.2*data_length):,:]
         train_labels = train_labels[int(0.2*data_length):,:]
@@ -85,8 +87,9 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             # label = label.type(torch.FloatTensor)
             #print(data)
 
-            data = data.cuda()
-            label = label.cuda()
+            if on_gpu:
+                data = data.cuda()
+                label = label.cuda()
 
             output1 = network1(data)
             output2 = network2(data)
@@ -147,10 +150,12 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
                 loss6 = criterion(output6, val_labels[:,5])
                 
                 val_loss = np.append(val_loss, np.array([[loss1, loss2, loss3, loss4, loss5, loss6]]))
-                loss = np.append(loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
+                train_loss = np.append(train_loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
 
             # Log progress
-        print('Epoch: {}, Avg Loss: {}'.format(epoch+1, np.mean(loss, axis=0)))
+        print('Epoch: {}'.format(epoch+1))
+        print('Avg Training Loss: {}'.format(np.mean(train_loss, axis=0)))
+        print('Avg Validati Loss: {}'.format(np.mean(val_loss, axis=0)))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
