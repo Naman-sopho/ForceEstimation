@@ -66,21 +66,21 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
     
         # Shuffle train_data randomly
         random_perm = np.random.permutation(data_length)
-        train_data = train_data[random_perm]
-        train_labels = train_labels[random_perm]
+        train_data1 = train_data[random_perm]
+        train_labels1 = train_labels[random_perm]
 
         # Split into train and val
-        val_data = train_data[:int(0.2*data_length),:]
-        val_labels = train_labels[:int(0.2*data_length),:]
+        val_data = train_data1[:int(0.2*data_length),:]
+        val_labels = train_labels1[:int(0.2*data_length),:]
 
         if on_gpu:
             val_data = val_data.cuda()
             val_labels = val_labels.cuda()
 
-        train_data = train_data[int(0.2*data_length):,:]
-        train_labels = train_labels[int(0.2*data_length):,:]
+        train_data1 = train_data1[int(0.2*data_length):,:]
+        train_labels1 = train_labels1[int(0.2*data_length):,:]
 
-        for data, label in zip(train_data, train_labels):
+        for data, label in zip(train_data1, train_labels1):
             # data = torch.from_numpy(data)
             # data = data.type(torch.FloatTensor)
             # label = torch.from_numpy(label)
@@ -153,7 +153,7 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             loss5 = criterion(output5, label[4])
             loss6 = criterion(output6, label[5])
             
-            val_loss = np.append(val_loss, np.array([[loss1, loss2, loss3, loss4, loss5, loss6]]))
+            val_loss = np.append(val_loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
         # Log progress
         print('Epoch: {}'.format(epoch+1))
         print('Avg Train Loss: {}'.format(np.mean(train_loss, axis=0)))
