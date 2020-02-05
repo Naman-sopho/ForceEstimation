@@ -3,6 +3,7 @@ import torch
 import os
 import numpy as np
 
+np.set_printoptions(precision=6, suppress=True)
 
 def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
     """
@@ -156,8 +157,8 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             val_loss = np.append(val_loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
         # Log progress
         print('Epoch: {}'.format(epoch+1))
-        print('Avg Train Loss: {}'.format(np.mean(train_loss, axis=0)))
-        print('Avg Val Loss : {}'.format(np.mean(val_loss, axis=0)))
+        print('Avg Train Loss: \n{}'.format(np.mean(train_loss, axis=0)))
+        print('Avg Val Loss : \n{}\n'.format(np.mean(val_loss, axis=0)))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
