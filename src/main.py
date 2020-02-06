@@ -15,12 +15,16 @@ def trainNetworks(inputFile, epochs):
 
     train.trainNetworks(train_data, train_labels, epochs=epochs)
 
+    runInference(test_data, test_labels)
 
-def runInference(inputFile):
+
+def runInference(test_data, test_labels, input_file=None):
     # TODO: Read from a file
-    inputData = np.array([[1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]])
+    # inputData = np.array([[1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]])
+    if input_file is None:
+        input_data, input_labels = test_data, test_labels
 
-    inference.runInference(inputData)
+        inference.runInference(input_data, input_labels)
 
 
 if __name__ == '__main__':
