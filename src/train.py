@@ -57,6 +57,9 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
 
     criterion = torch.nn.MSELoss()
 
+    avg_train_loss = np.empty((0, 6))
+    avg_val_loss = np.empty((0, 6))
+
     print("Starting training!!!")
     # SGD Implementation
     for epoch in range(epochs):
@@ -157,12 +160,21 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             val_loss = np.append(val_loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)
         # Log progress
         print('Epoch: {}'.format(epoch+1))
-        print('Avg Train Loss: \n{}'.format(np.mean(train_loss, axis=0)))
-        print('Avg Val Loss : \n{}\n'.format(np.mean(val_loss, axis=0)))
+
+        mean_train_loss = np.mean(train_loss, axis=0)
+        mean_val_loss = np.mean(val_loss, axis=0)
+
+        avg_train_loss = np.append(avg_train_loss, np.array([mean_train_loss]), axis=0)
+        avg_val_loss = np.append(avg_val_loss, np.array([mean_val_loss]), axis=0)
+        print('Avg Train Loss: \n{}'.format(mean_train_loss))
+        print('Avg Val Loss : \n{}\n'.format(mean_val_loss))
                   
     # Save the models after training
     MODELS_DIR = os.path.join('..' + '/models')
     print('Saving models to: {}'.format(MODELS_DIR))
+
+    np.savetxt('../train_results/avg_train_loss.csv', avg_train_loss, fmt='%10.10f', delimiter=',')
+    np.savetxt('../train_results/avg_val_loss.csv', avg_val_loss, fmt='%10.10f', delimiter=',')
     
     torch.save(network1.state_dict(), os.path.join(MODELS_DIR, 'network1.torch'))
     torch.save(network2.state_dict(), os.path.join(MODELS_DIR, 'network2.torch'))
