@@ -1,3 +1,8 @@
+########################
+# Author: Naman Tiwari
+# Created: 3/19/20
+########################
+
 import network
 import torch
 import os

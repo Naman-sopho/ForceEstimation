@@ -1,3 +1,8 @@
+########################
+# Author: Naman Tiwari
+# Created: 2/3/20
+########################
+
 import inference
 import numpy as np
 import sys

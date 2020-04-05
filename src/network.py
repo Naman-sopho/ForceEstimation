@@ -1,3 +1,8 @@
+########################
+# Author: Naman Tiwari
+# Created: 1/31/20
+########################
+
 import torch
 import torch.nn as nn
 

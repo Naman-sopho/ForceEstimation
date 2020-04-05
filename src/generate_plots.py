@@ -1,3 +1,8 @@
+########################
+# Author: Naman Tiwari
+# Created: 2/28/20
+########################
+
 import matplotlib.pyplot as plt 
 import numpy as np 
 
