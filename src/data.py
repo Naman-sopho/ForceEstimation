@@ -30,24 +30,36 @@ def read_data(filename):
     bag_ = bag.Bag(filename)
 
     # The topic which contains data required for training the networks
-    relevant_topic = 'state_joint_current'
+    joint_topic = '/dvrk/PSM1/state_joint_current'
+    jacobian_topic = '/dvrk/PSM1/jacobian_spatial'
+    force_topic = '/dvrk/PSM1/atinetft/wrench'
 
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
+    jacobains = np.empty((0, 6, 6))
+    forces = np.empty((0,3))
 
     print("Start reading bag file.")
 
-    for message in bag_.read_messages():
-        if relevant_topic in message.topic:
-            positions = np.array(message.message.position)
-            velocities = np.array(message.message.velocity)
+    for message in bag_.read_messages(topics=joint_topic):
+        positions = np.array(message.message.position)
+        velocities = np.array(message.message.velocity)
 
-            positions = np.append(positions, velocities)
+        positions = np.append(positions, velocities)
 
-            efforts = np.array(message.message.effort)
+        efforts = np.array(message.message.effort)
 
-            data = np.append(data, np.array([positions]), axis=0)
-            labels = np.append(labels, np.array([efforts]), axis=0)
+        data = np.append(data, np.array([positions]), axis=0)
+        labels = np.append(labels, np.array([efforts]), axis=0)
+    
+    for message in bag_.read_messages(topics=jacobian_topic):
+        jacobian = np.array(message.message.data).reshape((6,6))
+        jacobians = np.append(jacobians, np.array([jacobian]), axis=0)
+
+    for message in bag_.read_messages(topics=force_topic):
+        force = message.message.wrench.force
+        forces = np.append(forces, np.array([[force.x, force.y, force.z]]), axis=0)
+
 
     print()
     print("Reading file complete.")
@@ -56,6 +68,8 @@ def read_data(filename):
 
     np.savetxt('data.csv', data, fmt='%10.10f', delimiter=',')
     np.savetxt('labels.csv', labels, fmt='%10.10f', delimiter=',')
+    np.savetxt('jacobians.csv', labels, fmt='%10.10f', delimiter=',')
+    np.savetxt('forces.csv', labels, fmt='%10.10f', delimiter=',')
 
     train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
 
