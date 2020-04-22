@@ -3,6 +3,7 @@
 # Created: 2/3/20
 ########################
 
+import force_calculation
 import inference
 import numpy as np
 import sys
@@ -16,11 +17,15 @@ def trainNetworks(inputFile, epochs):
     # train_data = np.array([[1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]], dtype=np.double)
     # train_labels = np.array([[1, 2, 3, 4, 5, 6]], dtype=np.double)
     
-    train_data, train_labels, test_data, test_labels = data.read_data(inputFile)
+    train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces = data.read_data(inputFile)
 
     train.trainNetworks(train_data, train_labels, epochs=epochs)
 
     runInference(test_data, test_labels)
+
+    test_predictions = np.loadtxt('../inference_results/test_predictions.csv', delimiter=',')
+    calcForceFromPredictions(test_predictions, test_jacobians, test_forces)
+
 
 
 def runInference(test_data, test_labels, input_file=None):

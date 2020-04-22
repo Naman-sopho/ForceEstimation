@@ -17,14 +17,18 @@ def read_data(filename):
     # If csv file present read from it
     data_csv = 'data.csv'
     labels_csv = 'labels.csv'
+    jacobians_csv = 'jacobians.csv'
+    forces_csv = 'forces.csv'
 
     if os.path.exists(data_csv):
         data = np.loadtxt(data_csv, delimiter=',')
         labels = np.loadtxt(labels_csv, delimiter=',')
+        jacobians = np.loadtxt(jacobians_csv, delimiter=',')
+        forces = np.loadtxt(forces_csv, delimiter=',')
 
-        train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
+        train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces = split_train_test(data, labels)
 
-        return train_data, train_labels, test_data, test_labels
+        return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
 
     from rosbag import bag
     bag_ = bag.Bag(filename)
@@ -36,7 +40,7 @@ def read_data(filename):
 
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
-    jacobains = np.empty((0, 6, 6))
+    jacobians = np.empty((0, 6, 6))
     forces = np.empty((0,3))
 
     print("Start reading bag file.")
@@ -68,14 +72,14 @@ def read_data(filename):
 
     np.savetxt('data.csv', data, fmt='%10.10f', delimiter=',')
     np.savetxt('labels.csv', labels, fmt='%10.10f', delimiter=',')
-    np.savetxt('jacobians.csv', labels, fmt='%10.10f', delimiter=',')
-    np.savetxt('forces.csv', labels, fmt='%10.10f', delimiter=',')
+    np.savetxt('jacobians.csv', jacobians, fmt='%10.10f', delimiter=',')
+    np.savetxt('forces.csv', forces, fmt='%10.10f', delimiter=',')
 
-    train_data, train_labels, test_data, test_labels = split_train_test(data, labels)
+    train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces = split_train_test(data, labels, jacobians, forces)
 
-    return train_data, train_labels, test_data, test_labels
+    return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
 
-def split_train_test(data, labels):
+def split_train_test(data, labels, jacobians):
 
     # randomly shuffle data and labels
     length = len(data)
@@ -83,12 +87,18 @@ def split_train_test(data, labels):
     random_perm = np.random.permutation(length)
     data = data[random_perm]
     labels = labels[random_perm]
+    jacobians = jacobians[random_perm]
+    forces = forces[random_perm]
 
     # train-test split 80:20
     train_data = data[:int(0.8*length),:]
     train_labels = labels[:int(0.8*length),:]
+    train_jacobians = jacobians[:int(0.8*length),:,:]
+    train_forces = forces[:int(0.8*length),:]
     test_data = data[int(0.8*length):,:]
     test_labels = labels[int(0.8*length):,:]
+    test_jacobians = jacobians[int(0.8*length):,:,:]
+    test_forces = forces[int(0.8*length):,:]
 
     # train-validation split 80:20
     # train_len = length
@@ -98,4 +108,4 @@ def split_train_test(data, labels):
     # train_data = train_data[int(0.2*train_len):,:]
     # train_labels = train_labels[int(0.2*train_len):,:]
 
-    return train_data, train_labels, test_data, test_labels
+    return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
