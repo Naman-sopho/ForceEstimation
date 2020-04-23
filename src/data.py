@@ -3,6 +3,7 @@
 # Created: 2/3/20
 ########################
 
+import sys
 import numpy as np
 import os
 
@@ -40,7 +41,7 @@ def read_data(filename):
 
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
-    jacobians = np.empty((0, 6, 6))
+    jacobians = np.empty((0, 36))
     forces = np.empty((0,3))
 
     print("Start reading bag file.")
@@ -57,7 +58,7 @@ def read_data(filename):
         labels = np.append(labels, np.array([efforts]), axis=0)
     
     for message in bag_.read_messages(topics=jacobian_topic):
-        jacobian = np.array(message.message.data).reshape((6,6))
+        jacobian = np.array(message.message.data)
         jacobians = np.append(jacobians, np.array([jacobian]), axis=0)
 
     for message in bag_.read_messages(topics=force_topic):
@@ -109,3 +110,7 @@ def split_train_test(data, labels, jacobians):
     # train_labels = train_labels[int(0.2*train_len):,:]
 
     return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
+
+
+if __name__ == '__main__':
+    read_data(sys.argv[1])
