@@ -13,6 +13,9 @@ def plot():
     avg_train_loss = np.loadtxt('../train_results/avg_train_loss.csv', delimiter=',')
     avg_val_loss = np.loadtxt('../train_results/avg_val_loss.csv', delimiter=',')
 
+    predicted_forces = np.loadtxt('../inference_results/test_predicted_forces.csv', delimiter=',')
+    forces = np.loadtxt('../inference_results/test_actual_forces.csv', delimiter=',')
+
     fig1, (ax1, ax2, ax3, ax4, ax5, ax6) = plt.subplots(nrows=6, ncols=1)
 
     x = [x for x in range(len(test_predictions))]
@@ -78,3 +81,22 @@ def plot():
     ax6.set_ylabel('Loss Joint 6')
 
     fig2.savefig('loss.png')
+
+    fig3, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1)
+    ax1.plot(x, predicted_forces[:,0], label='Test Predictions Forces')
+    ax1.plot(x, forces[:,0], label='Test Labels Forces')
+    ax1.plot([x for x in range(len(predicted_forces))], np.subtract(predicted_forces[:,0], forces[:,0]), label='Difference')
+
+    ax2.plot(x, predicted_forces[:,1], label='Test Predictions Forces')
+    ax2.plot(x, forces[:, 1], label='Test Labels Forces')
+    ax2.plot([x for x in range(len(predicted_forces))], np.subtract(predicted_forces[:,1], forces[:,1]), label='Difference')
+
+    ax3.plot(x, predicted_forces[:, 2], label='Test Predictions Forces')
+    ax3.plot(x, forces[:, 2], label='Test Labels Forces')
+    ax3.plot([x for x in range(len(predicted_forces))], np.subtract(predicted_forces[:,2], forces[:,2]), label='Difference')
+
+    ax1.set_ylabel('Force.x')
+    ax2.set_ylabel('Force.y')
+    ax3.set_ylabel('Force.z')
+
+    fig3.savefig('forces.png')
