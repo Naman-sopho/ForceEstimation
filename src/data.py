@@ -3,7 +3,6 @@
 # Created: 2/3/20
 ########################
 
-import sys
 import numpy as np
 import os
 import sys
@@ -28,7 +27,7 @@ def read_data(filename):
         jacobians = np.loadtxt(jacobians_csv, delimiter=',')
         forces = np.loadtxt(forces_csv, delimiter=',')
 
-        train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces = split_train_test(data, labels)
+        train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces = split_train_test(data, labels, jacobians, forces)
 
         return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
 
@@ -42,12 +41,12 @@ def read_data(filename):
 
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
-    jacobians = np.empty((0, 36))
+    jacobians = np.empty((0, 6, 6))
     forces = np.empty((0,3))
 
     print("Start reading bag file.")
 
-    wre
+    for message in bag_.read_messages(topics=joint_topic):
         positions = np.array(message.message.position)
         velocities = np.array(message.message.velocity)
 
@@ -59,7 +58,7 @@ def read_data(filename):
         labels = np.append(labels, np.array([efforts]), axis=0)
     
     for message in bag_.read_messages(topics=jacobian_topic):
-        jacobian = np.array(message.message.data)
+        jacobian = np.array(message.message.data).reshape((6,6))
         jacobians = np.append(jacobians, np.array([jacobian]), axis=0)
 
     for message in bag_.read_messages(topics=force_topic):
@@ -81,7 +80,7 @@ def read_data(filename):
 
     return train_data, train_labels, test_data, test_labels, train_jacobians, train_forces, test_jacobians, test_forces
 
-def split_train_test(data, labels, jacobians):
+def split_train_test(data, labels, jacobians, forces):
 
     # randomly shuffle data and labels
     length = len(data)
