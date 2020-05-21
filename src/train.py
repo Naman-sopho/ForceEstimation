@@ -141,7 +141,7 @@ def trainNetworks(train_data, train_labels, epochs=5, learning_rate=0.001):
             optimiser6.step()
 
             with torch.no_grad():
-                print("Progress: {}/{}".format(index+1, data_length), end="\r", flush=True)
+                print("Progress: {}/{}".format(index+1, len(train_data1)), end="\r", flush=True)
                 index += 1
 
                 train_loss = np.append(train_loss, np.array([[loss1.item(), loss2.item(), loss3.item(), loss4.item(), loss5.item(), loss6.item()]]), axis=0)

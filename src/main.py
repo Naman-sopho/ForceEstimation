@@ -3,7 +3,7 @@
 # Created: 2/3/20
 ########################
 
-import force_calculation
+from force_calculation import calcForceFromPredictions
 import inference
 import numpy as np
 import sys

@@ -91,9 +91,11 @@ def split_train_test(data, labels, jacobians, forces):
     jacobians = jacobians[random_perm]
 
     # interpolate forces
-    x = [x for x in range(len(forces))]
+    x = np.array([i for i in range(len(forces))])
     coefs = np.polyfit(x, forces, 4)
-    x = [x for x in range(length)]
+    x_col = np.linspace(0,len(forces), length)
+    x = np.column_stack((x_col, x_col))
+    x = np.column_stack((x, x_col))
     forces = np.polyval(coefs, x)
 
     forces = forces[random_perm]
@@ -101,11 +103,11 @@ def split_train_test(data, labels, jacobians, forces):
     # train-test split 80:20
     train_data = data[:int(0.8*length),:]
     train_labels = labels[:int(0.8*length),:]
-    train_jacobians = jacobians[:int(0.8*length),:,:]
+    train_jacobians = jacobians[:int(0.8*length),:]
     train_forces = forces[:int(0.8*length),:]
     test_data = data[int(0.8*length):,:]
     test_labels = labels[int(0.8*length):,:]
-    test_jacobians = jacobians[int(0.8*length):,:,:]
+    test_jacobians = jacobians[int(0.8*length):,:]
     test_forces = forces[int(0.8*length):,:]
 
     # train-validation split 80:20
