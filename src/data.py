@@ -41,7 +41,7 @@ def read_data(filename):
 
     data = np.empty((0, 12))
     labels = np.empty((0, 6))
-    jacobians = np.empty((0, 6, 6))
+    jacobians = np.empty((0, 36))
     forces = np.empty((0,3))
 
     print("Start reading bag file.")
@@ -58,7 +58,7 @@ def read_data(filename):
         labels = np.append(labels, np.array([efforts]), axis=0)
     
     for message in bag_.read_messages(topics=jacobian_topic):
-        jacobian = np.array(message.message.data).reshape((6,6))
+        jacobian = np.array(message.message.data)
         jacobians = np.append(jacobians, np.array([jacobian]), axis=0)
 
     for message in bag_.read_messages(topics=force_topic):
@@ -89,6 +89,13 @@ def split_train_test(data, labels, jacobians, forces):
     data = data[random_perm]
     labels = labels[random_perm]
     jacobians = jacobians[random_perm]
+
+    # interpolate forces
+    x = [x for x in range(len(forces))]
+    coefs = np.polyfit(x, forces, 4)
+    x = [x for x in range(length)]
+    forces = np.polyval(coefs, x)
+
     forces = forces[random_perm]
 
     # train-test split 80:20
